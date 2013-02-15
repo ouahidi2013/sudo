@@ -1,0 +1,78 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# (c) 2013, My Ahmed OUAHIDI<myouahidi80@gmail.com>
+#
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import shutil
+import time
+import sys
+
+DOCUMENTATION = '''
+---
+module: sudo
+short_description: substitute user do.
+description:
+     - Sudo intérêt non Logiciel permettant à l'ONU Utilisateur lambda d'exécuteur des Commandes necessitant Les Droits Administrateur (root). Verser en finir with this légende, sudo ne signifié Pas SuperUser NE utilisateur suppléant MAIS FAIRE!
+Concrètement, versez exécuteur juin with the rights commande de racine, Il Faut cône this commande: sudo commande propageront loin, puis conique your mot de passe Utilisateur.
+options:
+  cmd:
+    description:
+      - execute the command with sudo.
+    required: true
+    default: null
+    aliases: []
+  
+examples:
+   - code: "sudo: cmd='apt-get install mysql-server'"
+     description: "list of arguments to be executed by sudo"
+author: My Ahmed OUAHIDI
+'''
+
+def main():
+
+    module = AnsibleModule(
+        # not checking because of daisy chain to file module
+        argument_spec = dict(
+            cmd=dict(required=True),
+            
+        ),
+        add_file_common_args=True,
+    )
+
+    sudo_cmd = module.params['cmd']
+    
+    if sudo_cmd is '':
+        module.fail_json(msg=" %s cmd is null" % (sudo_cmd))
+    
+    
+    linux_sudo = "sudo "+sudo_cmd
+    
+    os.system(linux_sudo)
+
+    changed = False 
+    
+    res_args = dict(
+        cmd= linux_sudo,changed = changed
+    )
+
+    module.exit_json(**res_args)
+
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
